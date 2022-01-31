@@ -1,0 +1,268 @@
+# 1. Создание репозитория
+Перед началом работы создается папка, в которой происходит создание репозитория и работа с ним. Папке дается название *lab_01*. Далее в эту папку перемещаются файлы iarray.py и main.py
+После этого заходим в *MSYS2* и перемещаемся в эту папку с помощью команды
+```c 
+cd lab_01
+```
+Далее используем команду
+```c
+git init
+```
+для создания локального репозитория в этой папке.
+# 2. Работа с git
+Перед работой непосредственно с репозиторием нам нужно ввести свои данные с помощью команд
+```c
+git config user.name "Your name"
+git config user.email "Your email"
+```
+
+В этой части лабораторной нам нужно занести два файла исходной программы под версионный контроль. Для этого сначала используем команды
+```c
+git add iarray.py
+git add main.py
+```
+Этой командой мы подготовили оба файла к загрузке в гит и сделали их отслеживаемыми.
+Для просмотра состояния файлов (все отслеживаемые и не отслеживаемые файлы) можно использовать команду
+```c
+git status 
+```
+Вывод команды 
+```
+$ git status
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   iarray.py
+        new file:   main.py
+```
+Нам выведется список из отслеживаемых (выделены зеленым) и не отслеживаемых (выделены красным) файлов. Далее нам нужно поместить отслеживаемые файлы непосредственно в git следующей командой 
+```c
+git commit -m "First commit"
+```
+В кавычках мы указываем комментарий к коммиту, чтобы было проще ориентироваться в версиях. Теперь наши файлы находятся под версионным контролем. 
+# 3. Добавление теста №2
+В файл *main.py* добавляем тест номер 2, а затем анализируем изменения с помощью команды
+```c
+git diff
+```
+Вывод получается достаточно объеным
+```
+$ git diff
+diff --git a/main.py b/main.py
+index d887f73..d507486 100644
+--- a/main.py
++++ b/main.py
+@@ -11,6 +11,15 @@ def test_1():
+   return arr, 4
+
++def test_2():^M
++  arr = list()^M
++  ^M
++  arr.append(10)^M
++  arr.append(5)^M
++  arr.append(3)^M
++  arr.append(8)^M
++  ^M
++  return arr, 4^M
+
+ def main():
+@@ -20,6 +29,12 @@ def main():
+
+   print("Max pos = " + str(get_max_pos(arr, n)))
+
++  arr, n = test_2()^M
++  print_array(arr, n)^M
++  print("Max pos = " + str(get_max_pos(arr, n)))^M
+ if __name__ == '__main__':
+   main()
+```
+Таким образом можно увидеть добавленные и удаленые строчки (добавленные отображаются со знаком "+" слева).
+Если же нам не нужен такой детальный разбор изменений достаточно написать команду
+```c
+git diff --name-status
+```
+Она показывает одной буквой статус файлов.
+Вывод:
+```c
+$ git diff --name-status
+M       main.py
+```
+Затем с помощью команд загружаем новую версию в репозиторий.
+```c
+git add main.py
+git commit -m "Test 2 was added"
+```
+# 4. Поиск ошибки в программе
+После добавления теста №2 программа выдает неправильный результат. Можно заметить, что если первый элемент массива является наибольшим, то программа аварийно завершается, хотя должна выдавать 0.
+Открываем ошибку в GitLab и приступаем к ее решению. Для решения этой проблемы достаточно добавить в программу одну строчку. Изменения снова анализируем с помощью команды 
+```
+$ git diff
+diff --git a/iarray.py b/iarray.py
+index b0b6360..0f58b5d 100644
+--- a/iarray.py
++++ b/iarray.py
+@@ -2,6 +2,7 @@ def get_max_pos(arr, n):
+   max = arr[0];
+
+   i = 1
++  j=0^M
+   while (i < n):
+     if (arr[i] > max):
+       max = arr[i]
+```
+После решения проблемы добавляем файл *iarray.py* в git.
+Для этого используем все те же команды
+```
+git add iarray.py
+git commit -m "Bug was fixed"
+```
+
+Для просмотра истории изменений можно использовать команду
+```c
+$ git log
+```
+```
+commit a97dd73f39a5b9063c56c8cb5c72559a00429f30 (HEAD -> master)
+Author: NataliL <lnv20u601@bmstu.ru>
+Date:   Thu Feb 25 16:27:25 2021 +0800
+
+    Bug was fixed
+
+commit kfj98gh36dfh309c6dh36dhf9jdif77f7c7cj3jd (HEAD -> master)
+Author: NataliL <lnv20u601@bmstu.ru>
+Date:   Thu Feb 25 16:20:15 2021 +0800
+
+    Test 2 was added
+
+commit jd93lsjg84kd0394c87c6dhkfk3jdhr9ke4jdjf3 (HEAD -> master)
+Author: NataliL <lnv20u601@bmstu.ru>
+Date:   Thu Feb 25 16:10:03 2021 +0800
+     
+     First commit
+```
+Но это не единственная возможность этой функции. Если написать,
+```c
+git log --name-status
+```
+```
+commit a97dd73f39a5b9063c56c8cb5c72559a00429f30 (HEAD -> master)
+Author: NataliL <lyapinanatali29@mail.ru>
+Date:   Thu Feb 25 16:27:25 2021 +0800
+
+    bug was fixed
+
+M       iarray.py
+
+commit 12c0a2a57361edc98bb0c90896748b7483362e2b (HEAD -> master)
+Author: NataliL <lyapinanatali29@mail.ru>
+Date:   Thu Feb 25 16:19:25 2021 +0800
+
+    Test 2 was added
+
+A       iarray.py
+A       main.py
+...
+```
+то можно увидеть список файлов, которые добавлены/изменены/удалены.
+
+
+Если же вам не нужна вся история коммитов, а только последний, то можно использовать аргумент -p 
+```c
+git log -p -1
+```
+```
+commit a97dd73f39a5b9063c56c8cb5c72559a00429f30 (HEAD -> master)
+Author: NataliL <lyapinanatali29@mail.ru>
+Date:   Thu Feb 25 16:27:25 2021 +0800
+
+    bug was fixed
+
+diff --git a/iarray.py b/iarray.py
+index b0b6360..0f58b5d 100644
+--- a/iarray.py
++++ b/iarray.py
+@@ -2,6 +2,7 @@ def get_max_pos(arr, n):
+   max = arr[0];
+
+   i = 1
++  j=0^M
+   while (i < n):
+     if (arr[i] > max):
+       max = arr[i]
+```
+Таким образом выведется только последний коммит.
+
+Для сравнения двух версий, которые уже находятся в репозитории нужно использовать команду
+```c
+git diff hash_sum_1 hash_sum_2
+```
+Где *hash_sum_1* и *hash_sum_2* - так называемые "номера версий" или первые семь символов hash-суммы последнего коммита.
+# 6. Wiki
+**Как добавлять рисунки?**
+Команда для добавления рисунков. Нужно загрузить файл с компьютера, нажав кнопку *Attach a file* 
+```c
+![markdown_logo](uploads/8c1bfff7cfe2d0c3727a1f32bf0d1975/markdown_logo.png)
+```
+
+![markdown_logo](uploads/8c1bfff7cfe2d0c3727a1f32bf0d1975/markdown_logo.png)
+
+**Как сделать оглавление?**
+### Заголовок
+Для того, чтобы сделать заголовки нужно использовать знак октоторп.
+Достаточно написать
+```markdown
+# Первый заголовок
+## Второй заголовок
+### Третий заголовок
+#### Четвертый заголовок
+##### Пятый заголовок
+```
+**Как добавить ссылки для перехода между страницами wiki?**
+
+Команда, чтобы сделать [такую ссылку](https://git.iu7.bmstu.ru/iu7-software-engineering/iu7-software-engineering-labs-2021/iu7-software-engineering-labs-2021-lyapinanatalia/-/wikis/test_01)
+```
+[тест для ссылки](ссылка)
+```
+**Как добавлять комментарии?**
+Для того, чтобы писать невидимые комментарии достаточно использовать конструкцию
+
+[//]: <> (Текст комментария)
+
+```
+[//]: <> (Текст комментария)
+[comment]: <> (Текст комментария)
+```
+
+**Стили оформления таблиц**
+Для оформления таблиц используются символы "|" - для разделения столбцов и "-" - для разделения строк. Ширина столбца подстраивается под размеры текста в ячейке, что значительно упрощает создание таблиц.
+
+*Например* 
+| header 1 | header 2 | header 3 |
+| ---      |  ------  |----------|
+| cell 1   | cell 2   | cell 3   |
+| cell 4 | cell 5 is longer | cell 6 is much longer than the others|
+| cell 7   |          | cell 9   | 
+```
+| header 1 | header 2 | header 3 |
+| ---      |  ------  |----------|
+| cell 1   | cell 2   | cell 3   |
+| cell 4 | cell 5 is longer | cell 6 is much longer than the others|
+| cell 7   |          | cell 9   |
+```
+
+Также можно делать выравнивание заголовка по левому или правому краю и по центру. Символ ":" используется для обозначения типа выравнивания.
+
+*Например*
+| Left Aligned | Centered | Right Aligned | 
+| :---         | :---:    | ---:          | 
+| Cell 1       | Cell 2   | Cell 3        |
+| Cell 7       | Cell 8   | Cell 9        |
+```
+| Left Aligned | Centered | Right Aligned | 
+| :---         | :---:    | ---:          |
+| Cell 1       | Cell 2   | Cell 3        |
+| Cell 7       | Cell 8   | Cell 9        |
+```

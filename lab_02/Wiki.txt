@@ -1,0 +1,674 @@
+# Задание 1
+## Пункт 1
+Создаем папку для лабораторной работы с названием *lab_02* и перемещаемся туда с помощью команды
+```
+cd lab_02
+```
+
+Первым пунктом требуется создать репозиторий командой
+```
+git init
+```
+Затем нужно ввести свое имя и почту
+```
+git config user.name "Имя пользователя"
+git config user.email "Почта пользователя"
+```
+
+## Пункт 2
+Во втором пункте требуется создать файл .gitignore . Для этого нужно воспользоваться командой 
+```
+touch .gitignore
+```
+Затем помещаем его под версионный контроль
+```
+git add .gitignore
+git commit -m "Gitignore file"
+```
+## Пункт 3
+Перемещаем файлы *iarray.py* и *main.py* в папку с лабораторной работой, перед этим нужно проверить программы на работоспособность. После проверки помещаем файлы под версионный контроль
+```
+git add iarray.py
+git add main.py
+git commit -m "First commit"
+```
+## Пункт 4
+Создание ветки и переключение на неё возможно двумя способами
+
+**1 способ**
+```
+git branch fix
+git checkout fix
+```
+В этом способе мы отдельно создаем ветку и затем отдельно не нее переключаемся.
+
+**2 способ**
+```
+git checkout -b fix
+```
+Одной командой мы и создали ветвь, и сразу же переключились на нее.
+
+Теперь с помощью команды 
+```
+git branch
+```
+можно посмотреть какие ветви доступны в этом репозитории.
+```
+$ git branch
+* fix
+  master
+```
+В данный момент мы находимся в ветке fix.
+## Пункт 5
+После изучения исходного кода программы, добавляем в нее комментарии и с помощью команды анализируем изменения
+```
+$ git diff
+...
+@@ -1,3 +1,4 @@
++# Функция находит индекс максимального элемента в массиве^M
+ def get_max_pos(arr, n):
+   max = arr[0];
+
+@@ -11,7 +12,7 @@ def get_max_pos(arr, n):
+
+   return j
+
+-
++# Функция выводит массив^M
+ def print_array(arr, n):
+   i = 0
+   while (i < n):
+```
+Когда изменения проанализированы можно поместить файл под версионный контроль с помощью команд
+```
+git add iarray.py
+git commit -m "Coment was added"
+```
+## Пункт 6
+Тест №2 состоит из чисел (10 5 3 8)
+Добавляем тест №2 в файл *main.py* и смотрим на изменения с помощью команды
+```
+$ git diff
+...
+@@ -10,6 +10,16 @@ def test_1():
+   return arr, 4
+
++def test_2():^M
++  arr = list()^M
++  ^M
++  arr.append(10)^M
++  arr.append(5)^M
++  arr.append(3)^M
++  arr.append(8)^M
++  ^M
++  return arr, 4^M
++^M
+
+ def main():
+   arr, n = test_1()
+@@ -17,5 +27,11 @@ def main():
+
+   print("Max pos = " + str(get_max_pos(arr, n)))
+
++  arr, n = test_2()^M
++^M
++  print_array(arr, n)^M
++  ^M
++  print("Max pos = " + str(get_max_pos(arr, n)))^M
++^M
+
+ if __name__ == '__main__':
+   main()
+```
+Затем добавляем файл под версионный контроль командами
+```
+git add main.py
+git commit -m "Test 2 was added"
+```
+## Пункт 7
+Создаем новую Issue и указываем в ней ход получения ошибки, номер ревизии и ее краткое описание. 
+
+[ссылка на Issure](https://git.iu7.bmstu.ru/iu7-software-engineering/iu7-software-engineering-labs-2021/iu7-software-engineering-labs-2021-lyapinanatalia/-/issues/2)
+## Пункт 8
+Теперь нужно исправить ошибку в файле *iarray.py* и проанализировать изменения с помощью команды
+```
+$ git diff
+...
+@@ -2,6 +2,7 @@
+ def get_max_pos(arr, n):
+   max = arr[0];
+
++  j = 0^M
+   i = 1
+   while (i < n):
+     if (arr[i] > max):
+```
+После этого можно поместить файл под версионный контроль
+```
+$ git add iarray.py
+$ git commit -m "Issure #2 can be closed."
+[fix 9e9b83c] Issure #2 can be closed.
+ 1 file changed, 1 insertion(+)
+```
+## Пункт 9
+Пишем в комментарий к ошибке, где указываем изменения и номер ревизии. Затем закрываем ошибку
+## Пункт 10
+Выполняем переключение на ветку *master* с помощью команды
+```
+$ git checkout master
+Switched to branch 'master'
+``` 
+Затем, с помощью команды выполняем слияние ветвей.
+```
+$ git merge fix
+Updating c3f0936..9b447e6
+Fast-forward
+ iarray.py |  5 +++--
+ main.py   | 16 ++++++++++++++++
+ 2 files changed, 19 insertions(+), 2 deletions(-)
+```
+Как можно заметить, конфликт при объединении изменений не произошел. В ветке *fix* мы лишь добавляли строки в код, но не изменяли первоначальный код. Именно поэтому изменения в ветках *fix* и *master* не наложились друг на друга и конфликт не произошел.
+## Пункт 11
+Указываем в Issure #2 номер ревизии, в которой изменения были перенесены в ветку master. После этого ошибку можно закрыть.
+## Пункт 12
+Проанализируем изменения в репозитории с помощью команды
+```
+$ git log --oneline --graph --all
+* 9b447e6 (HEAD -> master, fix) Issure #2 can be closed
+* 3317a75 Test 2 was added
+* 2606bdd Comment was added
+* c3f0936 First commit
+```
+Так как мы только добавляли новые строки в файлы *main.py* и *iarray.py*, то наши изменения не повлияли на изначальную программу.
+
+# Задание 2
+## Пункт 1
+Распаковываем репозиторий и переносим его в папку с нашей лабораторной работой. Затем с помощью команды переходим в папку с новым репозиторием.
+```
+$ cd small_fir
+```
+## Пункт 2
+Проанализируем историю репозитория с помощью команды
+```
+$ git log --graph --all --name-status
+*   commit 41378a62bbdd8058877790fb10c73e2de9ab478e (HEAD -> master)
+|\  Merge: 1295f70 a52c4ec
+| | Author: Songster <songster@test>
+| | Date:   Wed Mar 10 19:28:53 2021 +0300
+| |
+| |     Conflict was resolved
+| |
+| * commit a52c4ec45e14d5b48095e1bc9c569f06f4838362 (develop)
+| | Author: Songster <songster@test>
+| | Date:   Tue Mar 13 17:03:38 2018 +0300
+| |
+| |     Couplets #5 and #6.
+| |
+| | M   song.txt
+| |
+| * commit 2c605117c7fe0fc2452e787b44519f212ce48bcc
+| | Author: Songster <songster@test>
+| | Date:   Tue Mar 13 16:59:09 2018 +0300
+| |
+| |     Couplet #2.
+| |
+| | M   song.txt
+| |
+* | commit 1295f707870f0e1c13e9144b03cbef4bd10b52a7
+| | Author: Minstrel <minstrel@test>
+| | Date:   Tue Mar 13 17:01:15 2018 +0300
+| |
+| |     Couplet #4.
+| |
+| | M   song.txt
+| |
+* | commit 4fcbc684b3e8a22c172a218107bd669e0768b9f4
+| | Author: Minstrel <minstrel@test>
+| | Date:   Tue Mar 13 17:00:30 2018 +0300
+| |
+| |     Couplet #3.
+| |
+| | M   song.txt
+| |
+* | commit 122ee3aeeea5f70e6a933bf0f4afbaa436e57b25
+|/  Author: Minstrel <minstrel@test>
+|   Date:   Tue Mar 13 16:57:10 2018 +0300
+|
+|       Couplet #1.
+|
+|   M   song.txt
+|
+* commit f739d2e40e87639a7fbb1d2a1333944164f879be
+  Author: Minstrel <minstrel@test>
+  Date:   Tue Mar 13 16:50:47 2018 +0300
+
+      Beginning.
+
+  A     song.txt
+```
+Можно заметить, что в этом репозитории две ветви : master и develop. Также в нем работало два пользователя : Minstrel и Songster. Первый файл в репозиторий добавил Minstrel. Затем Songster создал ветку develop. Сначала Minstrel, а потом и Songster сделали один коммит в ветки master и develop соответственно. Затем Minstrel сделал два коммита в ветку master. И после этого последний коммит сделал Songster в ветку develop. Всего в репозитории находится один файл song.txt и совершено 6 коммитов.
+## Пункт 3
+При попытке объединить ветки командой возникает конфликт.
+```
+$ git merge develop
+Auto-merging song.txt
+CONFLICT (content): Merge conflict in song.txt
+Automatic merge failed; fix conflicts and then commit the result.
+```
+Если открыть файл *song.txt*, то можно увидеть, что в нем появился новый раздел.
+```
+<<<<<<< HEAD
+В лесу родилась ёлочка,
+В лесу она росла.
+Зимой и летом стройная,
+Зелёная была.
+
+Трусишка зайка серенький
+Под ёлочкой скакал.
+Порою волк, сердитый волк,
+Рысцою пробегал.
+
+Чу! Снег по лесу частому
+Под полозом скрипит.
+Лошадка мохноногая
+Торопится, бежит.
+=======
+Метель ей пела песенку:
+«Спи, ёлочка, бай-бай!»
+Мороз снежком укутывал:
+«Смотри, не замерзай!»
+
+Везёт лошадка дровенки,
+На дровнях - мужичок
+Срубил он нашу ёлочку
+Под самый корешок.
+
+Теперь она, нарядная,
+На праздник к нам пришла,
+И много, много радости
+Детишкам принесла.
+>>>>>>> develop
+```
+Чтобы в любой момент после появления конфликта увидеть, какие
+файлы не объединены, можно воспользоваться командой
+```
+$ git status
+On branch master
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+
+Unmerged paths:
+  (use "git add <file>..." to mark resolution)
+        both modified:   song.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+Таким образом git помечает конфликтующие части для того, чтобы пользователь сам мог разрешить конфликт. В нашем случае конфликт произошел из-за "накладывания" одного файла на другой. В результате в ветке develop у нас находится файл с названием *song.txt* с одним содержанием, а в ветке master точно такой же файл, но с совершенно другим содержанием. Из-за этого и произошел конфликт.
+
+Разрешить его можно либо путем выбора одного из двух вариантов, предложенных git, либо объединением их в один текст. В нашей работе мы выберем вариант объединения изменений.
+
+После ручного изменения файла его нужно внести в индекс и под версионный контроль.
+```
+$ git add song.txt
+$ git commit -m "Conflict was resolved"
+[master 41378a6] Conflict was resolved
+```
+Конфликт разрешен и ветви объединены.
+
+# Задание 3.1
+Сначала нужно скопировать репозиторий командой
+```
+git clone "Ссылка на репозиторий"
+```
+После того как репозиторий скопировался создаем в нем ветку.
+```
+git checkout -b lab_01
+```
+Затем вносим в нее файлы с лабораторной работой.
+Чтобы отправить изменения нужно использовать команду
+```
+git push
+```
+[Мой MR](https://git.iu7.bmstu.ru/iu7-cprog/iu7-cprog-labs-2021/iu7-cprog-labs-2021-lyapinanatalia/-/merge_requests/1#notes)
+
+# Задание 3.2
+## Пункт 1
+Копируем репозиторий командой
+```
+git clone https://git.iu7.bmstu.ru/iu7-software-engineering/iu7-software-engineering-labs-2021/iu7-software-engineering-labs-2021-lyapinanatalia.git
+```
+## Пункт 2
+Переходим в рабочую директорию командой
+```
+$ cd iu7-software-engineering-labs-2021-lyapinanatalia
+```
+## Пункт 3
+Создаем ветви
+```
+git branch lab_02_a
+git branch lab_02_b
+```
+## Пункт 4
+Переключаемся на ветвь *lab_02_a*
+```
+git checkout lab_02_a
+```
+## Пункт 5
+Создаем файл *lab_02_a.txt* и добавляем его под версионный контроль
+```
+git add lab_02_a
+git commit -m "lab_02_a.txt was added"
+```
+Затем  создаем файл *.gitignore*
+```
+touch .gitignore
+```
+И помещаем его под версионный контроль
+```
+git add .gitignore
+git commit -m "Gitignore file"
+```
+## Пункт 6
+Отправляем изменения в удаленный репозиторий
+```
+$ git push --set-upstream origin lab_02_a
+```
+И создаем merge request
+[Ссылка на MR A](https://git.iu7.bmstu.ru/iu7-software-engineering/iu7-software-engineering-labs-2021/iu7-software-engineering-labs-2021-lyapinanatalia/-/merge_requests/1)
+## Пункт 7
+Переключаемся на ветвь *lab_02_b*
+```
+$ git checkout lab_02_b
+Switched to branch 'lab_02_b'
+```
+## Пункт 8
+Создаем файл *lab_02_b.txt* и добавляем его под версионный контроль
+```
+git add lab_02_b
+git commit -m "lab_02_b.txt was added"
+```
+Затем  создаем файл *.gitignore*
+```
+touch .gitignore
+```
+И помещаем его под версионный контроль
+```
+git add .gitignore
+git commit -m "Gitignore file"
+```
+## Пункт 9
+Отправляем изменения в удаленный репозиторий
+```
+$ git push --set-upstream origin lab_02_b
+```
+И создаем merge request
+[ссылка на MR B](https://git.iu7.bmstu.ru/iu7-software-engineering/iu7-software-engineering-labs-2021/iu7-software-engineering-labs-2021-lyapinanatalia/-/merge_requests/2)
+## Пункт 11
+При открытии Merge request A появляется предупреждение.
+```
+There are merge conflicts. Resolve these conflicts or ask someone with write access to this repository to merge it locally
+```
+Для поиска причины конфликта следует извлечь изменения из удаленного репозитория и проанализировать их.
+```
+git pull
+$ git log --oneline --graph --all --name-status
+* 173e48b (origin/lab_02_a, lab_02_a) Gitignore was changed
+| M     .gitignore
+* 3fa3c8b Gitignore was fixed
+| M     .gitignore
+* 9d9672a Gitignore file
+| A     .gitignore
+* 18c51fa lab_02_a.txt was added
+| A     lab_02_a.txt
+| * faf911e (HEAD -> master, origin/master, origin/HEAD) Merge branch 'lab_02_b' into 'master'
+|/|
+| * 59e9097 Gitignore was changed
+| | M   .gitignore
+| * 5ef66cf Gitignore was changed
+| | M   .gitignore
+| * a3d61b1 returned readme to the repository
+| | A   readme.md
+| * 538c751 Gitignore was fixed
+| | M   .gitignore
+| | D   readme.md
+| * e186018 Gitignore file
+| | A   .gitignore
+| * 4422810 lab_02_b.txt was added
+|/
+|   A   lab_02_b.txt
+* 4ae41eb initial commit
+  A     readme.md
+```
+И просмотрим содержимое файла *.gitignore*
+```
+<<<<<<< HEAD
+*.exe
+=======
+*.o
+>>>>>>> master
+```
+В репозитории возник конфликт вследствие того, что теперь ветка *master* содержит все изменения ветки *lab_02_b*, а именно файл *.gitignore*. В ветке *lab_02_a* тоже есть файл *.gitignore*, но с совершенно другим содержанием. Конфликт возникает на фоне того, что изменения накладываются друг на друга, что не позволяет произвести автоматическое слияние. 
+## Пункт 12
+Существует два пути решения конфликта:
+ - объединить изменения в одно
+ - выбрать одно из двух изменений
+В нашем случае мы выберем одно из двух изменений в файле и заменим содержимое *.gitignore* в ветке *lab_02_a* на содержимое этого же файла из ветки *master*.
+Содержимое файла *.gitignore* после решения конфликта
+```
+*.o
+```
+Затем добавим файл под версионный контроль и отправим изменения в удаленный репозиторий.
+```
+$ git add .gitignore
+$ git commit -m "Conflict was fixed"
+[lab_02_a 4d2ae1c] Conflict was fixed 2.0
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+$ git push
+```
+Теперь конфликт разрешен.
+```
+Ready to be merged automatically. Ask someone with write access to this repository to merge this request
+```
+# Задание 3.3
+## Пункт 1
+
+**00:35**
+
+Копируем репозиторий командой
+```
+git clone https://git.iu7.bmstu.ru/iu7-software-engineering/iu7..
+```
+## Пункт 2
+
+**00:36**
+
+Переходим в рабочую директорию командой
+```
+$ cd iu7-software-engineering-labs-2021-lyapinanatalia
+```
+## Пункт 3
+
+**00:37**
+
+Создаем ветвь *lab_02_c* и переключаемся на нее
+```
+git checkout -b lab_02_c
+```
+## Пункт 4
+
+**00:38**
+
+Добавляем под версионный контроль файл *lab_02_c.txt*.
+```
+$ git add lab_02_c.txt
+$ git commit -m "Text file was added"
+```
+## Пункт 5
+
+**00:40**
+
+Отправляем изменения в удаленный репозиторий командой
+```
+$ git push --set-upstream origin lab_02_c
+```
+## Пункт 6
+
+**00:43**
+
+Добавляем в файл *lab_02_c.txt* абзац #3 и фиксируем изменения в локальном репозитории.
+```
+$ git add lab_02_c.txt
+$ git commit -m "paragraph # 3 added"
+```
+## Пункт 7
+
+**00:45**
+
+Клонируем репозиторий в другую директорию.
+```
+git clone https://git.iu7.bmstu.ru/iu7-software-engineering/iu7..
+```
+## Пункт 8
+
+**00:46**
+
+Переключаемся на ветвь *lab_02_c*
+```
+git checkout lab_02_c
+```
+## Пункт 9
+
+**00:48**
+
+Добавляем в файл *lab_02_c.txt* абзац #2 и выполняем фиксацию.
+```
+$ git add lab_02_c.txt
+$ git commit -m "paragraph # 2 added"
+```
+
+**00:50**
+
+Теперь отправляем изменения в удаленный репозиторий.
+```
+git push
+```
+## Пункт 11
+
+**00:52**
+
+Теперь из первой копии удаленного репозитория пробуем отправить изменения.
+```
+$ git push
+To https://git.iu7.bmstu.ru/iu7-software-engineering/iu7-software-engineering-labs-2021/iu7-software-engineering-labs-2021-lyapinanatalia.git
+ ! [rejected]        lab_02_c -> lab_02_c (fetch first)
+error: failed to push some refs to 'https://git.iu7.bmstu.ru/iu7-software-engineering/iu7-software-engineering-labs-2021/iu7-software-engineering-labs-2021-lyapinanatalia.git'
+```
+Произошла ошибка и изменения отправить не удалось. Это произошло из-за того, что файл *lab_02_c.txt* уже был кем-то изменен, и наша последняя фиксация противоречит содержимому файла, который находится в удаленном репозитории. 
+## Пункт 12
+
+**01:52**
+
+Чтобы решить конфликт необходимо извлечь данные с удаленного репозитория командой.
+```
+$ git pull
+Username for 'https://git.iu7.bmstu.ru':
+Password for 'https://lyapinanatali29@mail.ru@git.iu7.bmstu.ru':
+Auto-merging lab_02_c.txt
+CONFLICT (content): Merge conflict in lab_02_c.txt
+Automatic merge failed; fix conflicts and then commit the result.
+```
+Произошел конфликт, так как содержание файла *lab_02_c.txt* на удаленном репозитории и на локальном репозитории нельзя было слить. В чем мы убеждаемся с помощью команды
+
+**01:55**
+
+```
+$ git diff
+diff --cc lab_02_c.txt
+index df69620,3542859..0000000
+--- a/lab_02_c.txt
++++ b/lab_02_c.txt
+@@@ -8,12 -8,15 +8,27 @@@
+  Ля-ля-ля ля-ля-ля,
+  Ля-ля-ля-ля-ля ля-ля!
+
+++<<<<<<< HEAD
+ +Мы покрыты бронзовым загаром,
+ +Ягоды в лесу горят пожаром.
+ +Лето это жаркое недаром,
+ +Лето — это хорошо!
+ +
+ +Ля-ля-ля ля-ля-ля,
+ +Ля-ля-ля-ля-ля ля-ля-ля-ля.
+ +Ля-ля-ля ля-ля-ля,
+- Ля-ля-ля-ля-ля ля-ля!
+++Ля-ля-ля-ля-ля ля-ля!
+++=======
++ На зеленой солнечной опушке
++ Прыгают зеленые лягушки,
++ И танцуют бабочки-подружки,
++ Расцветает все кругом.
++
++ Мы в дороге с песенкой о лете,
++ Самой лучшей песенкой на свете,
++ Мы в лесу ежа, быть может, встретим,
++ Хорошо, что дождь прошел.
++
++ Ля-ля-ля ля-ля-ля,
++ Ля-ля-ля ля-ля-ля-ля.
+++>>>>>>> 6ea1f1f2b7aa889e77bf12b30cdda9ea914c9b53
+```
+
+**01:56**
+
+Приводим файл к виду 
+```
+$ git diff
+diff --cc lab_02_c.txt
+index df69620,3542859..0000000
+--- a/lab_02_c.txt
++++ b/lab_02_c.txt
+@@@ -8,12 -8,15 +8,25 @@@
+  Ля-ля-ля ля-ля-ля,
+  Ля-ля-ля-ля-ля ля-ля!
+
++ На зеленой солнечной опушке
++ Прыгают зеленые лягушки,
++ И танцуют бабочки-подружки,
++ Расцветает все кругом.
++
++ Мы в дороге с песенкой о лете,
++ Самой лучшей песенкой на свете,
++ Мы в лесу ежа, быть может, встретим,
++ Хорошо, что дождь прошел.
++
++ Ля-ля-ля ля-ля-ля,
++ Ля-ля-ля ля-ля-ля-ля.
+++
+ +Мы покрыты бронзовым загаром,
+ +Ягоды в лесу горят пожаром.
+ +Лето это жаркое недаром,
+ +Лето — это хорошо!
+ +
+ +Ля-ля-ля ля-ля-ля,
+ +Ля-ля-ля-ля-ля ля-ля-ля-ля.
+ +Ля-ля-ля ля-ля-ля,
+- Ля-ля-ля-ля-ля ля-ля!
+++Ля-ля-ля-ля-ля ля-ля!
+```
+
+**01:59**
+
+Добавляем файл под версионный контроль
+```
+$ git add lab_02_c.txt
+$ git commit -m "All paragraphs were added"
+[lab_02_c ee11042] All paragraphs were added
+```
+
+**02:00**
+
+Отправляем файл в удаленный репозиторий
+```
+$ git push
+```
